@@ -98,6 +98,15 @@ public class RetrofitTodoRepository implements TodoRepository {
     }
 
     @Override
+    public Observable<DataSourceOperation<Todo>> update(Todo todo) {
+        return todoApi.update(todo.getId(), todo)
+                .flatMap(response -> Observable.just(DataSourceOperation.success(response)))
+                .subscribeOn(Schedulers.io())
+                .doOnNext(apiResponse -> System.out.println("Received " + apiResponse.data))
+                .onErrorReturn(throwable -> buildDataSourceError(Todo.class, throwable))
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+    @Override
     public Observable<DataSourceOperation<SuccessResponse>> delete(Long id) {
         return todoApi.deleteTodo(id)
                 .flatMap(response -> Observable.just(DataSourceOperation.success(response)))

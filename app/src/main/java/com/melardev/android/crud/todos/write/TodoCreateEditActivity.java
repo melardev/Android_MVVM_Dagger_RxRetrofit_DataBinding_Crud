@@ -29,6 +29,7 @@ public class TodoCreateEditActivity extends BaseActivity {
     private long todoId;
 
     private TodoWriteBinding binding;
+    private Todo todo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +70,14 @@ public class TodoCreateEditActivity extends BaseActivity {
                 }
 
                 if (resource.isLoading()) {
-                    // displayLoader();
+                    displayLoader();
                 } else if (resource.data != null) {
-                    //(resource.data);
-                    Todo todo = resource.data;
+                    todo = resource.data;
                     binding.eTxtTitle.setText(todo.getTitle());
                     binding.eTxtDescription.setText(todo.getDescription());
                     binding.txtId.setText(String.valueOf(todo.getId()));
                 } else {
-                    // onError();
+                    handleErrorResponse(resource.fullMessages);
                 }
             });
 
@@ -88,8 +88,13 @@ public class TodoCreateEditActivity extends BaseActivity {
     public void saveTodo(View view) {
         String title = binding.eTxtTitle.getText().toString();
         String description = binding.eTxtDescription.getText().toString();
-
+        boolean completed = binding.eCheckboxCompleted.isChecked();
         if (editMode) {
+            todo.setTitle(title);
+            todo.setDescription(description);
+            todo.setCompleted(completed);
+
+            todoListViewModel.update(todo);
         } else {
             todoListViewModel.createTodo(title, description);
         }
@@ -104,14 +109,13 @@ public class TodoCreateEditActivity extends BaseActivity {
             }
 
             if (resource.isLoading()) {
-                // displayLoader();
+                displayLoader();
             } else if (resource.data != null) {
-
-                Toast.makeText(TodoCreateEditActivity.this, "Todo Created!", Toast.LENGTH_LONG);
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                Toast.makeText(TodoCreateEditActivity.this, "Todo Saved!", Toast.LENGTH_LONG)
+                        .show();
                 finish();
-            } else {   // handleErrorResponse();
+            } else {
+                handleErrorResponse(resource.fullMessages);
             }
         });
     }

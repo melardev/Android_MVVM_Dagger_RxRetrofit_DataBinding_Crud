@@ -83,6 +83,7 @@ public class TodoDetailsActivity extends BaseActivity {
         Intent intent = new Intent();
         if (binding.btnDetailsEditTodo == view) {
             intent.setComponent(new ComponentName(this, TodoCreateEditActivity.class));
+            intent.putExtra("TODO_ID", todoId);
             startActivity(intent);
         } else if (binding.btnDetailsDeleteTodo == view) {
             delete();

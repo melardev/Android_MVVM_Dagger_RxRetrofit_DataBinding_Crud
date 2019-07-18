@@ -42,4 +42,8 @@ public class TodoWriteViewModel extends ViewModel {
     public LiveData<DataSourceOperation<Todo>> getWriteTodoOperation() {
         return writeResponseLiveData;
     }
+
+    public void update(Todo todo) {
+        todoRepository.update(todo).subscribe(response -> writeResponseLiveData.postValue(response));
+    }
 }

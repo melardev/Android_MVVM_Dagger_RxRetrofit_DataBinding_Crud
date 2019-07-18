@@ -1,5 +1,6 @@
 package com.melardev.android.crud.datasource.common.repositories;
 
+import com.melardev.android.crud.datasource.common.entities.Todo;
 import com.melardev.android.crud.datasource.common.models.DataSourceOperation;
 import com.melardev.android.crud.datasource.remote.dtos.responses.SuccessResponse;
 
@@ -14,6 +15,8 @@ public interface BaseRepository<T> {
     Observable<DataSourceOperation<T>> getById(long id);
 
     Observable<DataSourceOperation<T>> create(T todo);
+
+    Observable<DataSourceOperation<T>> update(Todo todo);
 
     Observable<DataSourceOperation<SuccessResponse>> delete(Long id);
 }
